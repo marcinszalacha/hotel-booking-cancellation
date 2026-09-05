@@ -232,7 +232,9 @@ The treatment group performed better descriptively, but the result did not reach
 
 The experiment therefore provides a **promising but inconclusive** result rather than confirmed evidence of a causal treatment effect.
 
-The estimated business-impact figures are treated as descriptive estimates rather than confirmed causal ROI.
+The descriptive incremental booking-volume estimate is approximately **134,036**, but this should not be interpreted as 134,036 individually observed incremental reservations.
+
+The business-impact figures are treated as descriptive estimates rather than confirmed causal ROI.
 
 ---
 
@@ -278,13 +280,52 @@ The notebook is designed to run from a fresh Google Colab session.
 
 Repository structure:
 
-```text
-hotel-booking-cancellation/
-│
-├── hotel_booking_cancellation_classification.ipynb
-├── README.md
-├── .gitignore
-│
-└── data/
-    ├── hotel_cancellations.csv
-    └── hotel_bookings_geo_experiment.csv
+    hotel-booking-cancellation/
+    │
+    ├── hotel_booking_cancellation_classification.ipynb
+    ├── README.md
+    ├── .gitignore
+    │
+    └── data/
+        ├── hotel_cancellations.csv
+        └── hotel_bookings_geo_experiment.csv
+
+---
+
+## Tools and libraries
+
+The analysis uses:
+
+- Python
+- pandas
+- NumPy
+- matplotlib
+- scikit-learn
+- XGBoost
+- PyCaret
+- TensorFlow / Keras
+- statsmodels
+- pytimetk
+
+---
+
+## Limitations
+
+Key limitations include:
+
+- historical cancellation behaviour may change over time
+- a random split evaluates observations from the same broad historical population
+- new hotels, markets, or booking channels may behave differently
+- threshold selection depends on intervention capacity and business costs
+- predictive importance does not imply causality
+- some informative features may not be available at the intended scoring time
+- neural-network performance varies because of stochastic optimization
+- production use would require calibration checks, drift monitoring, periodic retraining, and experiment-based validation
+
+---
+
+## Author
+
+**Marcin Szalacha**
+
+GitHub: [marcinszalacha](https://github.com/marcinszalacha)
