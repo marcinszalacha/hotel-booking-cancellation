@@ -1,6 +1,6 @@
-    # Hotel Booking Cancellation Prediction
+# Hotel Booking Cancellation Prediction
 
-End-to-end machine learning project for predicting hotel booking cancellations, comparing multiple classification approaches, evaluating operating thresholds, translating predictive results into business interventions, and extending the analysis toward causal machine learning and treatment-effect targeting.
+End-to-end machine learning project for predicting hotel booking cancellations, comparing multiple classification approaches, evaluating operating thresholds, translating predictive results into business interventions, and extending the analysis toward causal machine learning and treatment effect targeting.
 
 [Open the notebook in Google Colab](https://colab.research.google.com/github/marcinszalacha/hotel-booking-cancellation/blob/main/hotel_booking_cancellation_classification.ipynb)
 
@@ -14,7 +14,7 @@ The objective of this project is to identify bookings at elevated risk of cancel
 
 A precision-first approach is used because false-positive predictions may lead to unnecessary customer interventions, additional operational cost, or customer friction.
 
-The model is intended as a **risk-targeting tool**: it identifies where preventative action may have the highest expected value, rather than assuming that prediction itself will reduce cancellations.
+The model is intended as a **risk-targeting tool**: it identifies bookings where preventative action may have the highest expected value, rather than assuming that prediction itself will reduce cancellations.
 
 ---
 
@@ -133,7 +133,7 @@ A shallow Decision Tree is also used separately as an **interpretation tool** to
 - useful recall
 - strong ROC-AUC
 - cross-validation stability
-- robust performance on the validation data
+- robust validation performance
 
 The neural-network benchmark achieved competitive predictive performance but did not satisfy the project's predefined stability rule across repeated runs.
 
@@ -224,7 +224,7 @@ The current classification model answers:
 
 That is useful for identifying risk, but it does not tell us whether a particular intervention would actually change the customer's behaviour.
 
-A booking can have very high predicted cancellation risk but still be unlikely to respond to a reminder, reconfirmation request, incentive, or payment-validation message.
+A booking may have very high predicted cancellation risk but still be unlikely to respond to a reminder, reconfirmation request, incentive, or payment-validation message.
 
 Another booking with only moderate baseline risk may be much more responsive to intervention.
 
@@ -269,7 +269,7 @@ Any future causal model should primarily use adjustment variables measured **bef
 
 Using post-treatment variables can introduce bias by conditioning on information that may itself have been affected by the treatment.
 
-This is especially important in hotel-booking data because some variables may only become known after booking creation or after customer contact.
+This is particularly important in hotel-booking data because some variables may only become known after booking creation or after customer contact.
 
 Predictive usefulness alone is therefore not sufficient: feature timing must also match the intended decision point.
 
@@ -290,11 +290,11 @@ During the active experiment period:
 
 The treatment group performed better descriptively, but the result did not reach the conventional 5% statistical significance threshold.
 
-The experiment therefore provides a **promising but inconclusive** result rather than confirmed evidence of a causal treatment effect.
+The result is therefore **promising but inconclusive** rather than confirmed evidence of a causal treatment effect.
 
 The descriptive incremental booking-volume estimate is approximately **134,036**, but this should not be interpreted as 134,036 individually observed incremental reservations.
 
-The business-impact figures are treated as descriptive estimates rather than confirmed causal ROI.
+The business-impact figures are therefore treated as descriptive estimates rather than confirmed causal ROI.
 
 ---
 
@@ -364,8 +364,8 @@ Even after estimating treatment effects, the business may still face practical c
 - limited staff capacity
 - customer-contact limits
 - intervention cost
-- restricted incentive budget
-- booking value differences
+- restricted incentive budgets
+- differences in booking value
 
 A future decision system could combine:
 
@@ -419,18 +419,7 @@ Repository structure:
 
 ## Tools and libraries
 
-The analysis uses:
-
-- Python
-- pandas
-- NumPy
-- matplotlib
-- scikit-learn
-- XGBoost
-- PyCaret
-- TensorFlow / Keras
-- statsmodels
-- pytimetk
+Python, pandas, NumPy, matplotlib, scikit-learn, XGBoost, PyCaret, TensorFlow/Keras, statsmodels, and pytimetk.
 
 ---
 
