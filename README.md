@@ -1,6 +1,6 @@
-# Hotel Booking Cancellation Prediction
+    # Hotel Booking Cancellation Prediction
 
-End-to-end machine learning project for predicting hotel booking cancellations, comparing multiple classification approaches, evaluating operating thresholds, and translating predictive results into business interventions and experiment design.
+End-to-end machine learning project for predicting hotel booking cancellations, comparing multiple classification approaches, evaluating operating thresholds, translating predictive results into business interventions, and extending the analysis toward causal machine learning and treatment-effect targeting.
 
 [Open the notebook in Google Colab](https://colab.research.google.com/github/marcinszalacha/hotel-booking-cancellation/blob/main/hotel_booking_cancellation_classification.ipynb)
 
@@ -14,7 +14,7 @@ The objective of this project is to identify bookings at elevated risk of cancel
 
 A precision-first approach is used because false-positive predictions may lead to unnecessary customer interventions, additional operational cost, or customer friction.
 
-The model is intended as a **targeting tool**: it identifies where preventative action may have the highest expected value, rather than assuming that prediction itself will reduce cancellations.
+The model is intended as a **risk-targeting tool**: it identifies where preventative action may have the highest expected value, rather than assuming that prediction itself will reduce cancellations.
 
 ---
 
@@ -44,6 +44,7 @@ The project follows an end-to-end analytical workflow:
 20. Business intervention hypotheses
 21. Controlled experiment analysis
 22. Power analysis for a future cancellation-reduction experiment
+23. Future causal ML extension: ATE, CATE, uplift modelling, and policy learning
 
 ---
 
@@ -215,6 +216,65 @@ These interventions should be treated as hypotheses and validated experimentally
 
 ---
 
+## From risk prediction to treatment-effect targeting
+
+The current classification model answers:
+
+**Who is likely to cancel?**
+
+That is useful for identifying risk, but it does not tell us whether a particular intervention would actually change the customer's behaviour.
+
+A booking can have very high predicted cancellation risk but still be unlikely to respond to a reminder, reconfirmation request, incentive, or payment-validation message.
+
+Another booking with only moderate baseline risk may be much more responsive to intervention.
+
+This creates two distinct modelling tasks:
+
+1. **Risk prediction**  
+   Estimate the probability of cancellation.
+
+2. **Treatment-effect estimation**  
+   Estimate how much a specific intervention changes the probability of cancellation.
+
+The current project solves the first problem.
+
+A future causal machine-learning extension could address the second once suitable booking-level treatment/control data are available.
+
+**Prediction identifies risk. Causal ML identifies impactability.**
+
+---
+
+## Causal terminology for a future extension
+
+For a future cancellation-reduction intervention:
+
+- **X — Features:** booking characteristics available before intervention
+- **T — Treatment:** reminder, reconfirmation request, incentive, payment validation, or another operational action
+- **Y — Outcome:** cancellation / no cancellation
+- **Y(1):** outcome if the booking receives treatment
+- **Y(0):** outcome if the booking does not receive treatment
+- **Treatment effect:** the difference between the treated and untreated potential outcomes
+
+The central causal challenge is that, for the same booking, only one of the two potential outcomes can actually be observed.
+
+The missing alternative is the **counterfactual**.
+
+This is why an accurate cancellation classifier cannot by itself tell the hotel whether an intervention caused a booking to be retained.
+
+---
+
+## Pre-treatment feature requirement
+
+Any future causal model should primarily use adjustment variables measured **before the intervention**.
+
+Using post-treatment variables can introduce bias by conditioning on information that may itself have been affected by the treatment.
+
+This is especially important in hotel-booking data because some variables may only become known after booking creation or after customer contact.
+
+Predictive usefulness alone is therefore not sufficient: feature timing must also match the intended decision point.
+
+---
+
 ## Controlled experiment analysis
 
 A separate geo-level experiment dataset is used to demonstrate the difference between **prediction** and **causal evaluation**.
@@ -258,15 +318,80 @@ These assumptions are illustrative and should be replaced with actual baseline c
 
 ---
 
+## Future causal ML extension
+
+The current cancellation model estimates **risk**, while a randomized experiment would estimate whether an intervention works on average.
+
+A future extension could go one step further and estimate **heterogeneous treatment effects**: whether the same intervention works differently for different booking types.
+
+### Average vs heterogeneous treatment effects
+
+A standard randomized experiment asks an **Average Treatment Effect (ATE)** question:
+
+**Does the intervention reduce cancellations on average?**
+
+A future causal machine-learning model could estimate **Conditional Average Treatment Effects (CATE)**:
+
+**For which booking types does the intervention work best, and by how much?**
+
+Potential treatment-effect heterogeneity could be investigated across characteristics such as:
+
+- lead time
+- market segment
+- customer type
+- deposit type
+- booking channel
+- number of special requests
+
+Potential causal ML approaches include:
+
+- S-Learner
+- T-Learner
+- X-Learner
+- R-Learner
+- DR-Learner
+- Causal Trees
+- Causal Forests
+
+These methods should only be applied once suitable booking-level treatment assignment and outcome data are available.
+
+---
+
+## From treatment effects to policy learning
+
+Even after estimating treatment effects, the business may still face practical constraints such as:
+
+- limited staff capacity
+- customer-contact limits
+- intervention cost
+- restricted incentive budget
+- booking value differences
+
+A future decision system could combine:
+
+**predicted cancellation risk × expected treatment effect × booking value − intervention cost**
+
+to prioritize bookings where intervention is expected to create the greatest incremental business value.
+
+The longer-term analytical progression is:
+
+**Prediction → causal estimation → treatment-effect targeting → policy learning**
+
+The goal is not simply to identify the highest-risk bookings, but eventually to identify the bookings for which a specific action is most likely to change the outcome.
+
+---
+
 ## Business takeaway
 
-The recommended operational workflow is:
+The recommended analytical progression is:
 
-**Predict risk → prioritize high-confidence bookings → intervene selectively → measure causal impact → scale only validated actions**
+**Predict risk → test intervention → estimate treatment effect → target responsive bookings → allocate actions under business constraints → monitor and scale validated actions**
 
-The predictive model supports **targeting**.
+The predictive model supports **risk targeting**.
 
-Randomized experimentation determines whether a proposed intervention actually changes customer behaviour.
+Randomized experimentation determines whether an intervention actually changes behaviour.
+
+Future causal ML could then estimate which booking types benefit most from treatment and support more efficient intervention allocation.
 
 ---
 
@@ -321,6 +446,9 @@ Key limitations include:
 - some informative features may not be available at the intended scoring time
 - neural-network performance varies because of stochastic optimization
 - production use would require calibration checks, drift monitoring, periodic retraining, and experiment-based validation
+- the main cancellation dataset does not contain randomized booking-level treatment assignment, so it cannot directly identify causal treatment effects
+- future causal ML would require clearly defined treatments, pre-treatment covariates, and sufficient overlap between treated and untreated bookings
+- uplift or CATE models should only be used once appropriate experimental or otherwise causally identified data are available
 
 ---
 
